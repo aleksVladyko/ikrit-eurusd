@@ -90,7 +90,7 @@ createTable()
         console.error("Ошибка при запуске сервера:", error);
     });
 export { getUsdRubHandler };
-// для проверки записи данных воспользуйтесь postman и отправьте POST запрос на
+// для  записи данных воспользуйтесь postman и отправьте POST запрос на
 // http://<ваш host>/setusdrub в формате JSON { "value": <number>}
 // или используйте curl -X POST -H "Content-Type: application/json" -d
 // '{"value":"1000"}' http://<ваш host>/setusdrub

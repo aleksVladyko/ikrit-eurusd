@@ -78,4 +78,5 @@ app.use((err, req, res, next) => {
 });
 const httpServer = app.listen(port, () => {
     console.log(`HTTP сервер запущен на порту: ${httpServer.address().port}`);
+    console.log(`Приложение доступно по адресу http://localhost:${port}/rates`);
 });
