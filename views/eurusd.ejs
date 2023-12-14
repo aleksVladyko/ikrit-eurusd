@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('./head.ejs') %>
+</head>
+
+<body class=" container-xl d-flex flex-column justify-content-center align-items-center bg-secondary bg-opacity-50"
+  style="height: 100vh;">
+  <h1>Установка значения курса EUR/USD</h1>
+  <form action="/seteurusd" method="post">
+    <label for="value">Значение:</label>
+    <input type="text" id="value" name="eurusd">
+    <button type="submit">Установить</button>
+  </form>
+
+</body>
+
+</html>

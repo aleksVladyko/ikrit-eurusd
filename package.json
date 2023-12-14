@@ -1,0 +1,27 @@
+{
+  "name": "ikrit-eurusd",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "app.js",
+  "bin": {
+    "ikrit-eurusd": "bin/app.js"
+  },
+  "scripts": {
+    "start": " npm i && npm run dev",
+    "dev": "npx pm2-dev bin/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "pm2": "^5.3.0"
+  }
+}
