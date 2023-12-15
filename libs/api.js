@@ -25,7 +25,7 @@ const setUsdRubHandler = async (req, res) => {
                 [usdrub.value]
             );
             console.log(
-                `Значение курса USD/RUB (${usdrub.value}) успешно записано в таблицу eur_usd`
+                `Значение курса USD/RUB (${usdrub.value}) успешно записано в таблицу usd_rub`
             );
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(response.rows[0]));
@@ -79,20 +79,34 @@ const apiServer = createServer(async (req, res) => {
         res.end(JSON.stringify({ error: "Страница не найдена" }));
     }
 });
-const asyncListen = promisify(apiServer.listen).bind(apiServer);
-asyncListen(apiPort)
-    .then(() => {
-        console.log(`API сервер запущен на порту:${apiServer.address().port}`);
-        // Создание таблицы после успешного подключения
-        createTable()
+
+const startApiServer = () => {
+    return new Promise((resolve, reject) => {
+        apiServer.listen(apiPort, (error) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve();
+            }
+        });
+    });
+};
+Promise.all([
+    startApiServer()
+        .then(() => {
+            console.log(`API сервер запущен на порту: ${apiServer.address().port}`);
+        })
+        .catch((error) => {
+            console.error("Ошибка при запуске сервера:", error);
+        }),
+    createTable()
         .catch((error) => {
             console.error("Ошибка при создании таблицы:", error);
-        });
-    })
+        }),
+])
     .catch((error) => {
-        console.error("Ошибка при запуске сервера:", error);
+        console.error("Ошибка при выполнении операций:", error);
     });
-
 // для  записи данных воспользуйтесь postman и отправьте POST запрос на
 // http://<ваш host>/setusdrub в формате JSON { "value": <number>}
 // или используйте curl -X POST -H "Content-Type: application/json" -d
