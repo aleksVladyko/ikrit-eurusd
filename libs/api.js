@@ -16,15 +16,17 @@ const setUsdRubHandler = async (req, res) => {
             req.on("error", reject);
         });
 
-        const postData = JSON.parse(data);
+        const usdrub = JSON.parse(data);
 
         const client = await pool.connect();
         try {
             const response = await client.query(
                 "INSERT INTO usd_rub (value) VALUES ($1) RETURNING *",
-                [postData.value]
+                [usdrub.value]
             );
-            console.log("запись успешно добавлена");
+            console.log(
+                `Значение курса USD/RUB (${usdrub.value}) успешно записано в таблицу eur_usd`
+            );
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(response.rows[0]));
         } finally {
@@ -77,21 +79,23 @@ const apiServer = createServer(async (req, res) => {
         res.end(JSON.stringify({ error: "Страница не найдена" }));
     }
 });
-
-createTable()
+const asyncListen = promisify(apiServer.listen).bind(apiServer);
+asyncListen(apiPort)
     .then(() => {
-        const asyncListen = promisify(apiServer.listen).bind(apiServer);
-        return asyncListen(apiPort);
-    })
-    .then(() => {
-        console.log(`API сервер запущен на порту: ${apiServer.address().port}`);
+        console.log(`API сервер запущен на порту:${apiServer.address().port}`);
+        // Создание таблицы после успешного подключения
+        createTable()
+        .catch((error) => {
+            console.error("Ошибка при создании таблицы:", error);
+        });
     })
     .catch((error) => {
         console.error("Ошибка при запуске сервера:", error);
     });
-export { getUsdRubHandler };
+
 // для  записи данных воспользуйтесь postman и отправьте POST запрос на
 // http://<ваш host>/setusdrub в формате JSON { "value": <number>}
 // или используйте curl -X POST -H "Content-Type: application/json" -d
 // '{"value":"1000"}' http://<ваш host>/setusdrub
-// получить последнюю запись http://<ваш host>/getusdrub
+// или любым другим способом ))
+// получить данные например так )) curl -X GET http://localhost:{apiPort}/getusdrub
