@@ -13,12 +13,14 @@ app.get("/rates", async (req, res) => {
     try {
         const client = await pool.connect();
         try {
-            const resultUsdRub = await client.query(
-                "SELECT value FROM usd_rub ORDER BY timestamp DESC LIMIT 1"
-            );
-            const resultEurUsd = await client.query(
-                "SELECT value FROM eur_usd ORDER BY timestamp DESC LIMIT 1"
-            );
+            const resultUsdRub =
+                (await client.query(
+                    "SELECT value FROM usd_rub ORDER BY timestamp DESC LIMIT 1"
+                )) || null;
+            const resultEurUsd =
+                (await client.query(
+                    "SELECT value FROM eur_usd ORDER BY timestamp DESC LIMIT 1"
+                )) || null;
             // приходит строка преобразуем в число
             const eurUsdRate = Number(resultEurUsd.rows[0]?.value) || null;
             const usdRubRate = Number(resultUsdRub.rows[0]?.value) || null;
