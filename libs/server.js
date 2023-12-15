@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import { pool, createEurUsdTable } from "./database.js";
 
-const port = process.env.HTTP_PORT;
+const port = process.env.HTTP_PORT || 8088;
 const app = express();
 
 app.use(express.json());
@@ -9,9 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
-createEurUsdTable().catch((error) => {
-    console.error("Ошибка при создании таблицы eur_usd:", error);
-});
 app.get("/rates", async (req, res) => {
     try {
         const client = await pool.connect();
@@ -76,7 +73,10 @@ app.use((err, req, res, next) => {
         next(err);
     }
 });
-const httpServer = app.listen(port, () => {
+const httpServer = app.listen(port, async () => {
     console.log(`HTTP сервер запущен на порту: ${httpServer.address().port}`);
+    await createEurUsdTable().catch((error) => {
+        console.error("Ошибка при создании таблицы eur_usd:", error);
+    });
     console.log(`Приложение доступно по адресу http://localhost:${port}/rates`);
 });

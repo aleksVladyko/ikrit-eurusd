@@ -22,7 +22,7 @@ const createTable = async () => {
           timestamp TIMESTAMPTZ DEFAULT NOW()
         )
       `);
-            console.log("Таблица usd_rub успешно создана");
+            console.log("Таблица usd_rub готова к записи данных");
         } finally {
             client.release();
         }
@@ -41,7 +41,7 @@ const createEurUsdTable = async () => {
             timestamp TIMESTAMPTZ DEFAULT NOW()
           )
         `);
-            console.log("Таблица eur_usd успешно создана");
+            console.log("Таблица eur_usd готова к записи данных");
         } finally {
             client.release();
         }
